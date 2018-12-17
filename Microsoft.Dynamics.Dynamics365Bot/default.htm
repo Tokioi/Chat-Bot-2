@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            width: 100%
+        }
+
+        #content {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0px;
+            height: 100%;
+            width: 100%
+        }
+    </style>
+    <link href="https://cdn.botframework.com/botframework-webchat/0.13.1-master.248c723/botchat.css" rel="stylesheet" />
+    
+</head>
+<body>
+    <div id="bot" />
+    <script src="https://cdn.botframework.com/botframework-webchat/0.13.1-master.248c723/botchat-es5.js"></script>
+    <script src="https://unpkg.com/botframework-webchat/CognitiveServices.js"></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.4/fetch.min.js"></script>  
+    <script>
+
+        var webChatSecret = '';
+        window.fetch('/api/token')
+            .then(function (response) {
+                if (!response.ok)
+                    throw Error(response.json());
+                return response.json();
+            })
+            .then(function (responseString) {
+                webChatSecret = responseString;
+            })
+            .then(function () {
+                console.log('webchat: ' + webChatSecret);
+                // Ensure userid changes for each page instance.
+                var userid = Math.random().toString(36).substr(2, 5);
+                BotChat.App({
+                    directLine: { secret: webChatSecret },
+                    user: { id: userid },
+                    resize: 'detect'
+                }, document.getElementById("bot"));
+            })
+            .catch(function (reason) {
+                console.log(reason);
+            });;
+        
+    </script>
+</body>
+</html>
